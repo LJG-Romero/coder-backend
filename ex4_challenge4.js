@@ -18,7 +18,11 @@ const app = express();
 const router = Router();
 
 const PORT = 8080;
-app.use('/api', router);
+app.use('/home/api', router);
+app.use('/home', express.static('public'));
+
+router.use(express.json())
+router.use(express.urlencoded({extended: true}))
 
 /** Server messages **/
 const server = app.listen(PORT, () => {
@@ -66,18 +70,23 @@ router.get('/products/:id', (req, res) => {
 
 /*** Post ***/
 router.post('/products', (req,res) => {
-    let newData = req.query;
-    data.push(newData);
-    res.send(`
-        New data loaded.
-        Id: ${data.length}
-        Asset: ${newData}
-        `);
+    let newData = req.body;
+    console.log(req.body);
+    // let newAsset = {
+    //     id: data.length ++,
+    //     category: data
+    // }
+    // data.push(newData);
+    // res.send(`
+    //     New data loaded.
+    //     Id: ${data.length}
+    //     Asset: ${newData}
+    //     `);
 });
 
 /*** Put ***/
 router.put('/products/:id', (req,res) => {
-    let dataUploaded = req.query;
+    let dataUploaded = req.body;
     let id = parseInt(req.params.id);
     data[id] = dataUploaded;
     res.send(`Data uploaded`);
