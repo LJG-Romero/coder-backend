@@ -9,12 +9,17 @@
 <body>
     <main>
         <h1>Stock Manager</h1>
-        <form action="/home/api/products" method="post">
-            <input type="text" placeholder="Category" id="catgory">
-            <input type="text" placeholder="Name" id="name">
-            <input type="number" placeholder="Stock" id="stock">
+        <form action="/home/add" method="POST">
+            Category: <input type="text" placeholder="Category" id="catgory" name="category" required>
+            Name: <input type="text" placeholder="Name" id="name" name="name" required>
+            Stock: <input type="number" placeholder="Stock" id="stock" name="stock" required>
+            <br>
+            <br>
             <button>Save</button>
+            
         </form>
+        <!-- <button><link rel="stylesheet" href="/home/list">Show assets</button> -->
+        <button onclick="location.href='/home/list'">Show assets</button>
     </main>
 </body>
 </html>

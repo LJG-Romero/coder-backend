@@ -1,24 +1,28 @@
 /* Imports */
 const express = require('express');
-const res = require('express/lib/response');
+// const res = require('express/lib/response');
 const {Router} = express;
 const data = require('./ex4_challengeDB');
 
+
 /* Controllers */
+/** Main test**/
+// console.log(typeof data);
+// console.log(data);
+let btnRet = `<button onclick="location.href='/home'">Home</button>`
+
 /** Data base **/
+// const data = []
     /* test */
     // let assets = new db();
     // console.log(`Assets catch: ${assets.assets}`);
-console.log(typeof data);
-console.log(data);
-
 
 /** Server **/
 const app = express();
 const router = Router();
 
 const PORT = 8080;
-app.use('/home/api', router);
+app.use('/home', router);
 app.use('/home', express.static('public'));
 
 router.use(express.json())
@@ -27,7 +31,6 @@ router.use(express.urlencoded({extended: true}))
 /** Server messages **/
 const server = app.listen(PORT, () => {
     console.log(`Server standby, listening on port ${server.address().port}.`)
-
 })
 
 /** Server error handler **/
@@ -36,22 +39,29 @@ server.on('error', error => console.log(`Error: ${error}`))
 
 /** Server petitions handlers **/
 /*** Get ***/
-router.get('/products', (req, res) => {
-    /* test */
-    // res.send(
-        // data.map( (product) => {
-        //     `<div>
-        //         <p>Product id: ${product.id}</p>
-        //         <p>Product category: ${product.category}</p>
-        //         <p>Product name: ${product.name}</p>
-        //         <p>Product stock: ${product.stock}</p>
-        //     </div>`
-        // })
-    // )
-    res.send(data);
+router.get('/list', (req, res) => {
+    let html = '';
+    data.map( (product) => {
+        let temp = `<div>
+                        <p>Product id: ${product.id}</p>
+                        <p>Product category: ${product.category}</p>
+                        <p>Product name: ${product.name}</p>
+                        <p>Product stock: ${product.stock}</p>
+                    </div> 
+                    <br>`
+        // html = html + temp
+        html += temp
+
+    })
+    html += btnRet
+    
+    res.send(html)
+    // res.send(data);
+    console.log(data)
+
 });
 
-router.get('/products/:id', (req, res) => {
+router.get('/list/:id', (req, res) => {
     let id = parseInt(req.params.id);
     /* test */
     // console.log(typeof id);
@@ -64,28 +74,39 @@ router.get('/products/:id', (req, res) => {
             <p>Product category: ${productRequired.category}</p>
             <p>Product name: ${productRequired.name}</p>
             <p>Product stock: ${productRequired.stock}</p>
-        </div>`
+        </div>
+        ${btnRet}`
     );
+    console.log(productRequired)
 });
 
 /*** Post ***/
-router.post('/products', (req,res) => {
-    let newData = req.body;
-    console.log(req.body);
-    // let newAsset = {
-    //     id: data.length ++,
-    //     category: data
-    // }
-    // data.push(newData);
-    // res.send(`
-    //     New data loaded.
-    //     Id: ${data.length}
-    //     Asset: ${newData}
-    //     `);
+router.post('/add', (req,res) => {
+
+    // let counterId = ++data.length // prefix usage leads to push first an empty "newAssets" obj to arr. **** Issue to resolve ****
+    let newAsset = {
+        // id: counterId
+        id: data.length + 1, 
+        ...req.body
+    }
+    newAsset.stock = Number(newAsset.stock) // Provisory
+    data.push(newAsset);
+    
+    res.send(`
+        <div>
+            <p>New data loaded.</p>
+            <p>Id: ${data.length}</p>
+            <p>Asset: ${JSON.stringify(newAsset)}</p>
+            <button onclick="location.href='/home/list'">Show assets</button>
+        </div>
+        ${btnRet}
+        `);
+    console.log(data)
+
 });
 
 /*** Put ***/
-router.put('/products/:id', (req,res) => {
+router.put('/modify/:id', (req,res) => {
     let dataUploaded = req.body;
     let id = parseInt(req.params.id);
     data[id] = dataUploaded;
@@ -93,7 +114,7 @@ router.put('/products/:id', (req,res) => {
 });
 
 /*** Delete ***/
-router.delete('/products/:id', (req,res) => {
+router.delete('/delete/:id', (req,res) => {
     let id = parseInt(req.params.id);
     let trash = data.splice(id,1);
     res.send(`Delete complete.`)
