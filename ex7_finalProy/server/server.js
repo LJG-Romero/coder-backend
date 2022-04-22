@@ -1,15 +1,12 @@
 /* Imports */
 const express = require('express');
 const {Router} = express;
-const db = require('..dB/dB.js');
-let userState = require('..public/public.js');
-
+const db = require('../dB/dB.js');
+let userState = require('../public/public.js');
 
 /* Controllers */
 /** Db **/
 let handler = new db('../dB/dB.txt');
-
-
 
 // let handler = null;
 // try{
@@ -24,16 +21,6 @@ let handler = new db('../dB/dB.txt');
 // }
 
 /** Server **/
-/*** App ***/
-const app = express();
-const PORT = 8080;
-
-app.use('/home', express.static('../public'));
-
-app.use('/home/users', routerUsers);
-app.use('/home/admin', routerAdmin);
-app.use('/home/cart', routerCart);
-
 /*** Routers ***/
 /**** Users ****/
 const routerUsers = Router();
@@ -49,6 +36,16 @@ routerAdmin.use(express.urlencoded({extended: true}));
 const routerCart = Router();
 routerCart.use(express.json());
 routerCart.use(express.urlencoded({extended: true}));
+
+/*** App ***/
+const app = express();
+const PORT = 8080;
+
+app.use('/home', express.static('../public')); /* Problema con el path absoluto a resolver */
+
+app.use('/home/users', routerUsers);
+app.use('/home/admin', routerAdmin);
+app.use('/home/cart', routerCart);
 
 /** Server messages **/
 const server = app.listen(PORT, () => {
