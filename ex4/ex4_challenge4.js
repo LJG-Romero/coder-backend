@@ -23,7 +23,7 @@ const router = Router();
 
 const PORT = 8080;
 app.use('/home', router);
-app.use('/home', express.static('public'));
+// app.use('/home', express.static('public'));
 
 router.use(express.json())
 router.use(express.urlencoded({extended: true}))

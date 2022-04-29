@@ -8,10 +8,11 @@ class Database {
     }
     async saveData(data){
         try{
-            await fs.promises.writeFile(this.fileName, JSON.parse(data));
+            await fs.promises.writeFile(this.fileName, JSON.stringify(data));
             console.log('saved!');
         }
         catch(err){
+            console.log(data);
             console.log(`Ups, file missed ... Error: ${err}`);
         }
     }
@@ -32,9 +33,14 @@ class Database {
     async getAll() {
         try{
             let data = await fs.promises.readFile(this.fileName, 'utf-8');
-            let dataStrg = JSON.parse(data);
+            console.log(data);
+            if (data != ''){
+                // let dataStrg = JSON.parse(data);
+                data = JSON.parse(data);
+            }
             // console.log(dataStrg);
-            return dataStrg;
+            // return dataStrg;
+            return data
         }
         catch(err){
             console.log(`Ups, file missed ... Error: ${err}`);
